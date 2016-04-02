@@ -1,0 +1,19 @@
+{
+  "name": "autoloader",
+  "version": "1.0.0",
+  "description": "A module autoloader",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape tests/*.js",
+    "cover": "node_modules/.bin/istanbul cover tape tests/*.js"
+  },
+  "keywords": [
+    "autoloader"
+  ],
+  "author": "Elias Malik",
+  "license": "ISC",
+  "devDependencies": {
+    "istanbul": "^0.4.2",
+    "tape": "^4.5.1"
+  }
+}
