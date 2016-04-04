@@ -1,3 +1,5 @@
+'use strict'
+
 const tape = require('tape')
 const path = require('path')
 const auto = require('../index.js')

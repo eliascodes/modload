@@ -26,7 +26,7 @@ module.exports = function (options) {
     .map((file) => file.slice(opts.dir.length + 1))
     .map((file) => {
       const fobj = path.parse(file)
-      return (fobj.base === opts.stopfile) ? fobj.dir : file
+      return fobj.base === opts.stopfile ? fobj.dir : file
     })
     .map((file, idx) => obj.fromFilePath(file, modules[idx]))
     .reduce((acc, curr) => obj.merge(acc, curr), {})
