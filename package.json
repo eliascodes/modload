@@ -4,8 +4,8 @@
   "description": "A module autoloader",
   "main": "index.js",
   "scripts": {
-    "test": "tape tests/*.js",
-    "cover": "node_modules/.bin/istanbul cover tape tests/*.js"
+    "test": "tape tests/runner.js",
+    "cover": "node_modules/.bin/istanbul cover tape tests/runner.js"
   },
   "keywords": [
     "autoloader"
