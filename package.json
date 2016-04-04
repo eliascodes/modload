@@ -11,7 +11,7 @@
     "autoloader"
   ],
   "author": "Elias Malik",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "istanbul": "^0.4.2",
     "tape": "^4.5.1"
