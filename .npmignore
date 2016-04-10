@@ -1,0 +1,7 @@
+coverage
+node_modules
+tests
+.eslint.json
+.eslintignore
+.gitignore
+README.md
