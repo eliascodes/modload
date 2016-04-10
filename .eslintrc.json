@@ -99,7 +99,6 @@
     "no-new-require": "error",
     "no-path-concat": "error",
     "no-process-exit": "error",
-    "no-sync": "error",
 
     "array-bracket-spacing": ["error", "never"],
     "block-spacing": ["error", "never"],
