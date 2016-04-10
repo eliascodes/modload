@@ -7,7 +7,7 @@ const auto = require('../index.js')
 const DIR_DUMMY = path.join(__dirname, 'dummy')
 
 tape('Default behaviour', (t) => {
-  const results = auto({dir: DIR_DUMMY})
+  const results = auto.asArray({dir: DIR_DUMMY})
 
   const expected = [
     path.join(DIR_DUMMY, 'file.dummy.1.js'),
@@ -23,10 +23,7 @@ tape('Default behaviour', (t) => {
 })
 
 tape('Object output', (t) => {
-  const results = auto({
-    dir: DIR_DUMMY,
-    output: 'object'
-  })
+  const results = auto.asObject({dir: DIR_DUMMY})
 
   const expected = {
     'file.dummy.1': path.join(DIR_DUMMY, 'file.dummy.1.js'),
@@ -50,9 +47,8 @@ tape('Object output', (t) => {
 })
 
 tape('Stopfile object output', (t) => {
-  const results = auto({
+  const results = auto.asObject({
     dir: DIR_DUMMY,
-    output: 'object',
     stopfile: 'index.js'
   })
 

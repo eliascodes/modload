@@ -18,7 +18,7 @@ tape('Check walk runs on dummy directory', (t) => {
 })
 
 tape('Check walk runs on dummy directory with excludes', (t) => {
-  const exclude = /dir_dummy_1/
+  const exclude = [/dir_dummy_1/]
 
   const result = tree.walk(path.join(__dirname, 'dummy'), null, exclude)
   t.equal(result.length, 8, '8 files in dir')
@@ -32,7 +32,7 @@ tape('Check walk runs on dummy directory with excludes', (t) => {
 })
 
 tape('Check walk runs on dummy directory with includes', (t) => {
-  const include = /dir_dummy_1/
+  const include = [/dir_dummy_1/]
 
   const result = tree.walk(path.join(__dirname, 'dummy'), null, null, include)
   t.equal(result.length, 3, '3 files in dir')
@@ -46,8 +46,8 @@ tape('Check walk runs on dummy directory with includes', (t) => {
 })
 
 tape('Check walk runs on dummy directory with excludes and includes', (t) => {
-  const exclude = /dir_dummy_2/
-  const include = /file\.dummy\.2/
+  const exclude = [/dir_dummy_2/]
+  const include = [/file\.dummy\.2/]
 
   const result = tree.walk(path.join(__dirname, 'dummy'), null, exclude, include)
   t.equal(result.length, 2, '2 files in dir')
