@@ -1,6 +1,6 @@
 'use strict'
 
-// TODO: support arrays for `dir`, `include`, `exclude`, `stopfile` options
+// TODO: support arrays for `dir`, `stopfile` options
 // TODO: support regex for `stopfile` option
 const path = require('path')
 const tree = require('./lib/tree.js')
@@ -11,29 +11,34 @@ const validators = require('./lib/validators.js')
 
 const parser = obj.parser(defaults, validators)
 
-module.exports = function (options) {
-  const opts = parser(options)
+module.exports = {
+  asArray: function (options) {
+    const opts = parser(options)
 
-  let files = tree.walk(opts.dir, null, opts.exclude, opts.include, opts.stopfile)
+    return tree
+      .walk(opts.dir, null, opts.exclude, opts.include, opts.stopfile)
+      .filter((file) => file.indexOf('.js') > -1)
+      .map(require)
+  },
 
-  files = files.filter((file) => file.indexOf('.js') > -1)
+  asObject: function (options) {
+    const opts = parser(options)
 
-  let modules = files.map(require)
+    let parsedObj = tree
+      .walk(opts.dir, null, opts.exclude, opts.include, opts.stopfile)
+      .filter((file) => file.indexOf('.js') > -1)
+      .map((file) => file.slice(opts.dir.length + 1))
+      .map((file) => {
+        const fobj = path.parse(file)
+        return fobj.base === opts.stopfile ? fobj.dir : file
+      })
+      .map((file) => obj.fromFilePath(file, require(file)))
+      .reduce((acc, curr) => obj.merge(acc, curr), {})
 
-  if (opts.output === 'array') return modules
-
-  let parsedObj = files
-    .map((file) => file.slice(opts.dir.length + 1))
-    .map((file) => {
-      const fobj = path.parse(file)
-      return fobj.base === opts.stopfile ? fobj.dir : file
-    })
-    .map((file, idx) => obj.fromFilePath(file, modules[idx]))
-    .reduce((acc, curr) => obj.merge(acc, curr), {})
-
-  if (opts.isglobal) {
-    global[opts.namespace] = parsedObj
-  } else {
-    return parsedObj
+    if (opts.isglobal) {
+      global[opts.namespace] = parsedObj
+    } else {
+      return parsedObj
+    }
   }
 }
