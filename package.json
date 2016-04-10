@@ -13,6 +13,7 @@
   "author": "Elias Malik",
   "license": "MIT",
   "devDependencies": {
+    "eslint": "^2.7.0",
     "istanbul": "^0.4.2",
     "tape": "^4.5.1"
   }
