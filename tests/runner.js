@@ -1,6 +1,7 @@
 /*
 * Test runner
 */
+'use strict'
 
 require('./tree.test.js')
 require('./outils.test.js')
