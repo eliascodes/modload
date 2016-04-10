@@ -2,6 +2,7 @@
 
 // TODO: support arrays for `dir`, `stopfile` options
 // TODO: support regex for `stopfile` option
+
 const path = require('path')
 const tree = require('./lib/tree.js')
 const obj = require('./lib/outils.js')
@@ -24,15 +25,17 @@ module.exports = {
   asObject: function (options) {
     const opts = parser(options)
 
-    let parsedObj = tree
+    let fullfiles = tree
       .walk(opts.dir, null, opts.exclude, opts.include, opts.stopfile)
       .filter((file) => file.indexOf('.js') > -1)
+
+    let parsedObj = fullfiles
       .map((file) => file.slice(opts.dir.length + 1))
       .map((file) => {
         const fobj = path.parse(file)
         return fobj.base === opts.stopfile ? fobj.dir : file
       })
-      .map((file) => obj.fromFilePath(file, require(file)))
+      .map((file, i) => obj.fromFilePath(file, require(fullfiles[i])))
       .reduce((acc, curr) => obj.merge(acc, curr), {})
 
     if (opts.isglobal) {
