@@ -15,15 +15,29 @@ const parser = obj.parser(defaults, validators)
 module.exports = {
   asArray: function (options) {
     const opts = parser(options)
+    let importer
+
+    if (opts.es6modules) {
+      importer = (file) => require(file).default
+    } else {
+      importer = require
+    }
 
     return tree
       .walk(opts.dir, null, opts.exclude, opts.include, opts.stopfile)
       .filter((file) => file.indexOf('.js') > -1)
-      .map(require)
+      .map(importer)
   },
 
   asObject: function (options) {
     const opts = parser(options)
+    let importer
+
+    if (opts.es6modules) {
+      importer = (file) => require(file).default
+    } else {
+      importer = require
+    }
 
     let fullfiles = tree
       .walk(opts.dir, null, opts.exclude, opts.include, opts.stopfile)
@@ -35,7 +49,7 @@ module.exports = {
         const fobj = path.parse(file)
         return fobj.base === opts.stopfile ? fobj.dir : file
       })
-      .map((file, i) => obj.fromFilePath(file, require(fullfiles[i])))
+      .map((file, i) => obj.fromFilePath(file, importer(fullfiles[i])))
       .reduce((acc, curr) => obj.merge(acc, curr), {})
 
     if (opts.isglobal) {
