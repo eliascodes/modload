@@ -71,6 +71,9 @@ Options object with the following fields:
 > ##### `stopfile`
 > ###### ( String or RegExp | default: null )
 > A file in the directory tree matching this pattern is interpreted as the entry point for it's parent directory. Only this file is required; all other files in the same directory, and in sub-directories, are skipped.
+> ##### `es6modules`
+> ###### ( Boolean | default: `false` )
+> A flag to specify whether modules are exported with ES6 module syntax (i.e. using the `export` keyword). If `true`, the autoloader will require the default value (i.e., whatever is exported by `export default`)
 
 ### `asObject(options)`
 ##### Return
