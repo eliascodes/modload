@@ -37,15 +37,15 @@ A simple autoloader for node modules.
   ```javascript
   const app = {
     routes: {
-      home: require('app/routes/home.js'),
-      login: require('app/routes/login.js')
+      home: require('./app/routes/home.js'),
+      login: require('./app/routes/login.js')
     },
     plugins: {
-      auth: require('app/routes/auth.js')
+      auth: require('./app/routes/auth.js')
     }
   }
   ```
-  This object can be attached to the `global` object via an options object.
+  This object can be attached to the `global` object via an optional argument.
 
 ## API
 The autoloader module provides two methods, which both take an options object to configure their behaviour.
@@ -54,7 +54,7 @@ The autoloader module provides two methods, which both take an options object to
 
 ### `asArray(options)`
 ##### Return
-Array of module objects
+Array of required modules.
 
 ##### Parameters
 ###### options
@@ -64,10 +64,10 @@ Options object with the following fields:
 > Root directory of files to require
 > ##### `include`
 > ###### ( Array of RegExp | default: null )
-> RegExp patterns of files to require. Patterns are sequentially applied. Exclude patterns take precedence over include patterns.
+> RegExp patterns of files to include. Patterns are combined into a single regex pattern with OR. Exclude patterns take precedence over include patterns.
 > ##### `exclude`
 > ###### ( Array of RegExp | default: null )
-> RegExp patterns of files to require. Patterns are sequentially applied. Exclude patterns take precedence over include patterns.
+> RegExp patterns of files to exclude. Patterns are combined into a single regex pattern with OR. Exclude patterns take precedence over include patterns.
 > ##### `stopfile`
 > ###### ( String or RegExp | default: null )
 > A file in the directory tree matching this pattern is interpreted as the entry point for it's parent directory. Only this file is required; all other files in the same directory, and in sub-directories, are skipped.
@@ -78,19 +78,7 @@ Array of module objects
 
 ##### Parameters
 ###### options
-Options object with the following fields:
-> ##### `dir`
-> ###### ( String | required )
-> Root directory of files to require
-> ##### `include`
-> ###### ( Array of RegExp | default: null )
-> RegExp patterns of files to require. Patterns are sequentially applied. Exclude patterns take precedence over include patterns.
-> ##### `exclude`
-> ###### ( Array of RegExp | default: null )
-> RegExp patterns of files to require. Patterns are sequentially applied. Exclude patterns take precedence over include patterns.
-> ##### `stopfile`
-> ###### ( String or RegExp | default: null )
-> A file in the directory tree matching this pattern is interpreted as the entry point for it's parent directory. Only this file is required; all other files in the same directory, and in sub-directories, are skipped.
+Options object with exactly the same fields as for the `asArray` method, but with the following additional field:
 > ##### `namespace`
 > ###### ( String | default: null )
 > If set to a non-null string, specifies the key of the `global` object to which the object will be attached.
