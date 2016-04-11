@@ -36,7 +36,9 @@ tape('Object output', (t) => {
         'file.dummy.1': path.join(DIR_DUMMY, 'dir_dummy_2', 'dir_dummy_3', 'file.dummy.1.js'),
         'index': path.join(DIR_DUMMY, 'dir_dummy_2', 'dir_dummy_3', 'index.js'),
         'dir_dummy_4': {
-          'file.dummy.1': path.join(DIR_DUMMY, 'dir_dummy_2', 'dir_dummy_3', 'dir_dummy_4', 'file.dummy.1.js')
+          'file.dummy.1': path.join(
+            DIR_DUMMY, 'dir_dummy_2', 'dir_dummy_3', 'dir_dummy_4', 'file.dummy.1.js'
+          )
         }
       }
     }
