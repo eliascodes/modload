@@ -1,51 +1,244 @@
 'use strict'
 
 const tape = require('tape')
+require('chai').should()
 const path = require('path')
 const utils = require('../lib/utils.js')
 
-tape('Empty filepath gives empty object', (t) => {
-  t.equal(Object.keys(utils.object.createNested.fromString('')).length, 0)
-  t.end()
+describe('Testing `all`', () => {
+  it('should return false if all false', (done) => {
+    utils.all([false, false, false]).should.equal(false)
+    done()
+  })
+
+  it('should return false if some false', (done) => {
+    utils.all([false, true, true]).should.equal(false)
+    done()
+  })
+
+  it('should return true if all true', (done) => {
+    utils.all([true, true, true]).should.equal(true)
+    done()
+  })
+
+  it('should return true if all truthy', (done) => {
+    utils.all(['something', 1, {}]).should.equal(true)
+    done()
+  })
+
+  it('should return false if some falsy', (done) => {
+    utils.all(['something', null, []]).should.equal(false)
+    done()
+  })
+
+  it('should return false if all falsy', (done) => {
+    utils.all(['', null, undefined]).should.equal(false) // eslint-disable-line
+    done()
+  })
+
+  it('should return false if any zeros', (done) => {
+    utils.all([1, 0, 1]).should.equal(false)
+    done()
+  })
 })
 
-tape('Filepath with depth 1', (t) => {
-  const expected = {
-    index: 1
-  }
-  t.deepEqual(utils.object.createNested.fromString('index', path.sep, 1), expected)
-  t.end()
+describe('Testing `any`', () => {
+  it('should return false if all false', (done) => {
+    utils.any([false, false, false]).should.equal(false)
+    done()
+  })
+
+  it('should return true if some false', (done) => {
+    utils.any([false, true, true]).should.equal(true)
+    done()
+  })
+
+  it('should return true if all true', (done) => {
+    utils.any([true, true, true]).should.equal(true)
+    done()
+  })
+
+  it('should return true if all truthy', (done) => {
+    utils.any(['something', 1, {}]).should.equal(true)
+    done()
+  })
+
+  it('should return true if some falsy', (done) => {
+    utils.any(['something', null, []]).should.equal(true)
+    done()
+  })
+
+  it('should return false if all falsy', (done) => {
+    utils.any(['', null, undefined]).should.equal(false) // eslint-disable-line
+    done()
+  })
+
+  it('should return true if any zeros', (done) => {
+    utils.any([1, 0, 1]).should.equal(true)
+    done()
+  })
+
+  it('should return false if all zeros', (done) => {
+    utils.any([0, 0, 0]).should.equal(false)
+    done()
+  })
 })
 
-tape('Filepath with depth 2', (t) => {
-  const expected = {
-    foo: {
-      index: 1
-    }
-  }
-  t.deepEqual(utils.object.createNested.fromString('foo/index', path.sep, 1), expected)
-  t.end()
+describe('Testing `isa`', () => {
+  it('should be able to test for primitives', (done) => {
+    utils.is.a('this', 'string').should.equal(true)
+    utils.is.a(false, 'boolean').should.equal(true)
+    utils.is.a(1, 'number').should.equal(true)
+    utils.is.a(undefined, 'undefined').should.equal(true) // eslint-disable-line
+    // don't test for null because typeof null === 'object'
+    done()
+  })
+
+  it('should be able to test for objects via instanceof', (done) => {
+    utils.is.a([], Array).should.equal(true)
+    utils.is.a(/g/, RegExp).should.equal(true)
+    utils.is.a({}, Object).should.equal(true)
+    done()
+  })
 })
 
-tape('Filepath with depth 3', (t) => {
-  const expected = {
-    foo: {
-      bar: {
-        index: 1
-      }
-    }
-  }
-  t.deepEqual(utils.object.createNested.fromString('foo/bar/index', path.sep, 1), expected)
-  t.end()
+describe('Testing `isarrayof`', () => {
+  it('should return true for array of all strings', (done) => {
+    utils.is.arrayof(['a', 'b'], 'string').should.equal(true)
+    done()
+  })
+
+  it('should return false for array of some strings', (done) => {
+    utils.is.arrayof(['a', 1], 'string').should.equal(false)
+    done()
+  })
+
+  it('should return true for array of all functions', (done) => {
+    utils.is.arrayof([() => {}, () => 1], Function).should.equal(true)
+    done()
+  })
+
+  it('should return false for array of some functions', (done) => {
+    utils.is.arrayof([() => {}, '() => 1'], Function).should.equal(false)
+    done()
+  })
 })
 
-tape('Object merge', (t) => {
-  let a = {x: 1, y: {z: 2, q: {r: 1}}}
-  let b = {x: 2, y: {q: {r: 2, s: 1}}}
+describe('Testing `isdir`', () => {
+  it('should return true for absolute path to directory', (done) => {
+    utils.is.dir(__dirname).should.equal(true)
+    done()
+  })
 
-  let exp = {x: 2, y: {z: 2, q: {r: 2, s: 1}}}
-  let actual = utils.object.merge(a, b)
+  it('should return false for absolute path to file', (done) => {
+    utils.is.dir(__filename).should.equal(false)
+    done()
+  })
+})
 
-  t.deepEqual(actual, exp, 'Merges')
-  t.end()
+describe('Testing `isPlainObject`', () => {
+  it('should return true if object literal', (done) => {
+    utils.is.plainObject({}).should.equal(true)
+    done()
+  })
+
+  it('should return true if object constructed', (done) => {
+    utils.is.plainObject(new Object()).should.equal(true) // eslint-disable-line
+    done()
+  })
+
+  it('should return true if object created', (done) => {
+    utils.is.plainObject(Object.create(null)).should.equal(true)
+    done()
+  })
+})
+
+describe('Testing `object.merge`', () => {
+  it('should return original object if second is empty', (done) => {
+    const o1 = {a: 1, b: 2}
+    utils.object.merge(o1, {}).should.deep.equal(o1)
+    done()
+  })
+
+  it('should overwrite attributes of first argument with second', (done) => {
+    const o1 = {a: 1, b: 2}
+    const o2 = {a: 2, b: 'b'}
+    utils.object.merge(o1, o2).should.deep.equal(o2)
+    done()
+  })
+
+  it('should add attributes not present in first argument', (done) => {
+    const o1 = {a: 1, b: 2}
+    const o2 = {c: 'c', b: 'b'}
+    utils.object.merge(o1, o2).should.deep.equal({a: 1, b: 'b', c: 'c'})
+    done()
+  })
+
+  it('should merge objects recursively if both keys are objects', (done) => {
+    const o1 = {a: {a1: 1, a2: 2}, b: {b1: 0, b2: 'a'}}
+    const o2 = {a: {a0: 0, a1: 'a'}, b: {b0: {}, b2: 'b'}}
+    utils.object.merge(o1, o2).should.deep.equal({
+      a: {a0: 0, a1: 'a', a2: 2},
+      b: {b0: {}, b1: 0, b2: 'b'}
+    })
+    done()
+  })
+
+  it('should overwrite value if only first key corresponds to object', (done) => {
+    const o1 = {a: {a1: 1, a2: 0}, b: 2}
+    const o2 = {a: [1, 2, 3]}
+    utils.object.merge(o1, o2).should.deep.equal({
+      a: [1, 2, 3],
+      b: 2
+    })
+    done()
+  })
+
+  it('should overwrite value if only second key corresponds to object', (done) => {
+    const o1 = {a: [1, 2, 3]}
+    const o2 = {a: {a1: 1, a2: 0}, b: 2}
+    utils.object.merge(o1, o2).should.deep.equal({
+      a: {a1: 1, a2: 0},
+      b: 2
+    })
+    done()
+  })
+
+  it('should successfully merge 2 levels deep', (done) => {
+    const o1 = {a: {a0: {a0A: 1, a0B: 2}, a1: 's'}, b: {b0: {b0A: 0}}}
+    const o2 = {a: {a0: {a0A: 'a'}}, b: {b0: {b0A: 1, b0B: 'b'}}}
+    utils.object.merge(o1, o2).should.deep.equal({
+      a: {a0: {a0A: 'a', a0B: 2}, a1: 's'},
+      b: {b0: {b0A: 1, b0B: 'b'}}
+    })
+    done()
+  })
+})
+
+describe('Testing `createNested.fromString`', () => {
+  it('should return empty object for empty filepath', (done) => {
+    utils.object.createNested.fromString('').should.deep.equal({})
+    done()
+  })
+
+  it('should parse string with no separator', () => {
+    utils
+      .object
+      .createNested
+      .fromString('index', path.sep, null).should.deep.equal({index: null})
+  })
+
+  it('should parse string with single separator', () => {
+    utils
+      .object
+      .createNested
+      .fromString('foo/index', path.sep, 1).should.deep.equal({foo: {index: 1}})
+  })
+
+  it('should parse string with two separators', () => {
+    utils
+      .object
+      .createNested
+      .fromString('foo/bar/index', path.sep, 1).should.deep.equal({foo: {bar: {index: 1}}})
+  })
 })
