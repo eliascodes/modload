@@ -1,6 +1,5 @@
 'use strict'
 
-const tape = require('tape')
 require('chai').should()
 const path = require('path')
 const utils = require('../lib/utils.js')
@@ -240,5 +239,37 @@ describe('Testing `createNested.fromString`', () => {
       .object
       .createNested
       .fromString('foo/bar/index', path.sep, 1).should.deep.equal({foo: {bar: {index: 1}}})
+  })
+})
+
+describe('Testing `parser`', () => {
+  it('should merge defaults', (done) => {
+    const defaults = {a: 1, b: 2}
+    const parser = utils.object.parser(defaults, {})
+    parser({}).should.deep.equal(defaults)
+    done()
+  })
+
+  it('should throw if validation unsuccessful', (done) => {
+    const defaults = {}
+    const validators = {a: (x) => utils.is.a(x, 'string')}
+    const parser = utils.object.parser(defaults, validators)
+
+    const fn = () => parser({a: 1})
+    fn.should.throw(Error)
+    done()
+  })
+
+  it('should not throw if validation is successful', (done) => {
+    const defaults = {}
+    const validators = {a: (x) => utils.is.a(x, 'string')}
+    const parser = utils.object.parser(defaults, validators)
+
+    const input = {a: 'hello'}
+
+    const fn = () => parser(input)
+    fn.should.not.throw(Error)
+    fn().should.deep.equal(input)
+    done()
   })
 })
