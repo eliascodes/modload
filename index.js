@@ -2,10 +2,11 @@
 
 // TODO: support arrays for `dir`, `stopfile` options
 // TODO: support regex for `stopfile` option
+// TODO: support .jsx files
 
 const path = require('path')
 const tree = require('./lib/tree.js')
-const obj = require('./lib/outils.js')
+const obj = require('./lib/utils.js').object
 
 const defaults = require('./lib/defaults.js')
 const validators = require('./lib/validators.js')
@@ -19,8 +20,11 @@ module.exports = {
     const importer = opts.es6modules ? (file) => require(file).default : require
 
     return tree
+      // walk directory tree for relevant files
       .walk(opts.dir, null, opts.exclude, opts.include, opts.stopfile)
-      .filter((file) => file.indexOf('.js') > -1)
+      // filter out non-js files
+      .filter((file) => path.extname(file) === '.js')
+      // import modules
       .map(importer)
   },
 
@@ -30,22 +34,27 @@ module.exports = {
     const importer = opts.es6modules ? (file) => require(file).default : require
 
     let fullfiles = tree
+      // walk directory tree for relevant files
       .walk(opts.dir, null, opts.exclude, opts.include, opts.stopfile)
-      .filter((file) => file.indexOf('.js') > -1)
+      // filter out non-js files
+      .filter((file) => path.extname(file) === '.js')
 
     let parsedObj = fullfiles
+      // strip root-directory
       .map((file) => file.slice(opts.dir.length + 1))
-      .map((file) => {
-        const fobj = path.parse(file)
-        return fobj.base === opts.stopfile ? fobj.dir : file
-      })
-      .map((file, i) => obj.fromFilePath(file, importer(fullfiles[i])))
+      // map to dirname if file matches stopfile
+      .map((file) => path.basename(file) === opts.stopfile ? path.dirname(file) : file)
+      // strip file extension
+      .map((file) => path.join(path.dirname(file), path.basename(file, '.js')))
+      // build nested object from string
+      .map((file, i) => obj.createNested.fromString(file, path.sep, importer(fullfiles[i])))
+      // merge objects
       .reduce((acc, curr) => obj.merge(acc, curr), {})
 
     if (opts.isglobal) {
       global[opts.namespace] = parsedObj
-    } else {
-      return parsedObj
     }
+
+    return parsedObj
   }
 }
