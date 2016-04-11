@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node_modules/.bin/mocha tests/runner.js",
-    "cover": "node_modules/.bin/istanbul cover npm test"
+    "cover": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha tests/runner.js"
   },
   "keywords": [
     "autoloader"
