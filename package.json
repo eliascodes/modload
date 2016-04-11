@@ -4,8 +4,8 @@
   "description": "A module autoloader",
   "main": "index.js",
   "scripts": {
-    "test": "tape tests/runner.js",
-    "cover": "node_modules/.bin/istanbul cover tape tests/runner.js"
+    "test": "node_modules/.bin/mocha tests/runner.js",
+    "cover": "node_modules/.bin/istanbul cover npm test"
   },
   "keywords": [
     "autoloader"
@@ -13,8 +13,9 @@
   "author": "Elias Malik",
   "license": "MIT",
   "devDependencies": {
+    "chai": "^3.5.0",
     "eslint": "^2.7.0",
     "istanbul": "^0.4.2",
-    "tape": "^4.5.1"
+    "mocha": "^2.4.5"
   }
 }
