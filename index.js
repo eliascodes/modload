@@ -6,7 +6,8 @@
 
 const path = require('path')
 const tree = require('./lib/tree.js')
-const obj = require('./lib/utils.js').object
+const utils = require('./lib/utils.js')
+const obj = utils.object
 
 const defaults = require('./lib/defaults.js')
 const validators = require('./lib/validators.js')
@@ -43,7 +44,13 @@ module.exports = {
       // strip root-directory
       .map((file) => file.slice(opts.dir.length + 1))
       // map to dirname if file matches stopfile
-      .map((file) => path.basename(file) === opts.stopfile ? path.dirname(file) : file)
+      .map((file) => {
+        if (utils.is.a(opts.stopfile, RegExp)) {
+          return opts.stopfile.test(file) ? path.dirname(file) : file
+        } else {
+          return file
+        }
+      })
       // strip file extension
       .map((file) => path.join(path.dirname(file), path.basename(file, '.js')))
       // build nested object from string
