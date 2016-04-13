@@ -1,75 +1,166 @@
 'use strict'
 
+require('chai').should()
 const fs = require('fs')
-const tape = require('tape')
 const path = require('path')
 const tree = require('../lib/tree.js')
 
-tape('Check walk runs on dummy directory', (t) => {
-  const result = tree.walk(path.join(__dirname, 'dummy'))
-  t.equal(result.length, 11, '11 files in dir')
+const DIR_DUMMY = path.join(__dirname, 'dummy')
 
-  result.forEach((file) => {
-    t.ok(file.indexOf(path.join(__dirname, 'dummy')) > -1, 'File in right directory')
-    t.ok(fs.statSync(file).isFile(), 'Found file that exists')
+function assertNumFilesInResults (n, dir, array) {
+  array.length.should.equal(n)
+
+  array.forEach((el) => {
+    el.search(dir).should.equal(0)
+    fs.statSync(el).isFile().should.equal(true)
   })
+}
 
-  t.end()
+describe('Walking with default options', () => {
+  it('should return all files when using default options', (done) => {
+    const result = tree.walk(DIR_DUMMY)
+
+    assertNumFilesInResults(11, DIR_DUMMY, result)
+
+    done()
+  })
 })
 
-tape('Check walk runs on dummy directory with excludes', (t) => {
-  const exclude = [/dir_dummy_1/]
+describe('Walking with exclusions', () => {
+  it('should exclude single file specified', (done) => {
+    const exc = /file.dummy.2.js/
 
-  const result = tree.walk(path.join(__dirname, 'dummy'), null, exclude)
-  t.equal(result.length, 8, '8 files in dir')
+    const result = tree.walk(DIR_DUMMY, null, exc)
 
-  result.forEach((file) => {
-    t.ok(file.indexOf(path.join(__dirname, 'dummy')) > -1, 'File in right directory')
-    t.ok(fs.statSync(file).isFile(), 'Found file that exists')
+    assertNumFilesInResults(10, DIR_DUMMY, result)
+
+    done()
   })
 
-  t.end()
+  it('should exclude many files matching pattern', (done) => {
+    const exc = /.js/
+
+    const result = tree.walk(DIR_DUMMY, null, exc)
+
+    assertNumFilesInResults(5, DIR_DUMMY, result)
+
+    done()
+  })
+
+  it('should exclude array of patterns', (done) => {
+    const exc = [/\.md/, /\.txt/, /\.css/, /\.scss/, /\.html/]
+
+    const result = tree.walk(DIR_DUMMY, null, exc)
+
+    assertNumFilesInResults(6, DIR_DUMMY, result)
+
+    done()
+  })
 })
 
-tape('Check walk runs on dummy directory with includes', (t) => {
-  const include = [/dir_dummy_1/]
+describe('Walking with includes', () => {
+  it('should return only file matching include pattern', (done) => {
+    const inc = /dir_dummy_4/
 
-  const result = tree.walk(path.join(__dirname, 'dummy'), null, null, include)
-  t.equal(result.length, 3, '3 files in dir')
+    const result = tree.walk(DIR_DUMMY, null, null, inc)
 
-  result.forEach((file) => {
-    t.ok(file.indexOf(path.join(__dirname, 'dummy')) > -1, 'File in right directory')
-    t.ok(fs.statSync(file).isFile(), 'Found file that exists')
+    assertNumFilesInResults(1, DIR_DUMMY, result)
+
+    done()
   })
 
-  t.end()
+  it('should return all files matching include pattern', (done) => {
+    const name = 'file.dummy.1.js'
+    const inc = new RegExp(name + '$')
+
+    const result = tree.walk(DIR_DUMMY, null, null, inc)
+
+    assertNumFilesInResults(4, DIR_DUMMY, result)
+
+    result.forEach((file) => {
+      file.search(name).should.equal(file.length - name.length)
+    })
+
+    done()
+  })
+
+  it('should include array of patterns', (done) => {
+    const exc = [/\.md/, /\.txt/, /\.css/, /\.scss/, /\.html/]
+
+    const result = tree.walk(DIR_DUMMY, null, null, exc)
+
+    assertNumFilesInResults(5, DIR_DUMMY, result)
+
+    done()
+  })
 })
 
-tape('Check walk runs on dummy directory with excludes and includes', (t) => {
-  const exclude = [/dir_dummy_2/]
-  const include = [/file\.dummy\.2/]
+describe('Walking with includes and excludes', () => {
+  it('should return all include files for non-overlapping include/exclude patterns', (done) => {
+    const exc = /dir_dummy_/
+    const inc = /\.md/
 
-  const result = tree.walk(path.join(__dirname, 'dummy'), null, exclude, include)
-  t.equal(result.length, 2, '2 files in dir')
+    const result = tree.walk(DIR_DUMMY, null, exc, inc)
 
-  result.forEach((file) => {
-    t.ok(file.indexOf(path.join(__dirname, 'dummy')) > -1, 'File in right directory')
-    t.ok(fs.statSync(file).isFile(), 'Found file that exists')
+    assertNumFilesInResults(1, DIR_DUMMY, result)
+
+    result[0].should.equal(path.join(DIR_DUMMY, 'file.dummy.3.md'))
+
+    done()
   })
 
-  t.end()
+  it('should return only non-overlapping files for overlapping inc/exc patterns', (done) => {
+    const exc = /dir_dummy_/
+    const inc = /file.dummy.1.js$/
+
+    const result = tree.walk(DIR_DUMMY, null, exc, inc)
+
+    assertNumFilesInResults(1, DIR_DUMMY, result)
+
+    result[0].should.equal(path.join(DIR_DUMMY, 'file.dummy.1.js'))
+
+    done()
+  })
+
+  it('should return no files for identical include/exclude patterns', (done) => {
+    const exc = /dir_dummy_1/
+    const inc = exc
+
+    const result = tree.walk(DIR_DUMMY, null, exc, inc)
+
+    assertNumFilesInResults(0, DIR_DUMMY, result)
+
+    done()
+  })
 })
 
-tape('Check walk runs on dummy directory with stopfile', (t) => {
-  const stopfile = 'index.js'
+describe('Walking with stopfile', () => {
+  it('should only return the stopfile from a directory', (done) => {
+    const stopfile = /file.dummy.1.js/
 
-  const result = tree.walk(path.join(__dirname, 'dummy'), null, null, null, stopfile)
-  t.equal(result.length, 9, '9 files')
+    const result = tree.walk(DIR_DUMMY, null, null, null, stopfile)
 
-  result.forEach((file) => {
-    t.ok(file.indexOf(path.join(__dirname, 'dummy')) > -1, 'File in right directory')
-    t.ok(fs.statSync(file).isFile(), 'Found file that exists')
+    assertNumFilesInResults(1, DIR_DUMMY, result)
+
+    result[0].should.equal(path.join(DIR_DUMMY, 'file.dummy.1.js'))
+
+    done()
   })
 
-  t.end()
+  it('should only return the stopfile from an included directory', (done) => {
+    const stopfile = /index.js/
+    const inc = /dir_dummy_3/
+
+    const result = tree.walk(DIR_DUMMY, null, null, inc, stopfile)
+
+    assertNumFilesInResults(1, DIR_DUMMY, result)
+
+    result[0].should.equal(
+      path.join(
+        DIR_DUMMY, 'dir_dummy_2', 'dir_dummy_3', 'index.js'
+      )
+    )
+
+    done()
+  })
 })
