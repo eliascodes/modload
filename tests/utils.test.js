@@ -3,6 +3,7 @@
 require('chai').should()
 const path = require('path')
 const utils = require('../lib/utils.js')
+const nutil = require('util')
 
 describe('Testing `all`', () => {
   it('should return false if all false', (done) => {
@@ -79,46 +80,6 @@ describe('Testing `any`', () => {
 
   it('should return false if all zeros', (done) => {
     utils.any([0, 0, 0]).should.equal(false)
-    done()
-  })
-})
-
-describe('Testing `isa`', () => {
-  it('should be able to test for primitives', (done) => {
-    utils.is.a('this', 'string').should.equal(true)
-    utils.is.a(false, 'boolean').should.equal(true)
-    utils.is.a(1, 'number').should.equal(true)
-    utils.is.a(undefined, 'undefined').should.equal(true) // eslint-disable-line
-    // don't test for null because typeof null === 'object'
-    done()
-  })
-
-  it('should be able to test for objects via instanceof', (done) => {
-    utils.is.a([], Array).should.equal(true)
-    utils.is.a(/g/, RegExp).should.equal(true)
-    utils.is.a({}, Object).should.equal(true)
-    done()
-  })
-})
-
-describe('Testing `isarrayof`', () => {
-  it('should return true for array of all strings', (done) => {
-    utils.is.arrayof(['a', 'b'], 'string').should.equal(true)
-    done()
-  })
-
-  it('should return false for array of some strings', (done) => {
-    utils.is.arrayof(['a', 1], 'string').should.equal(false)
-    done()
-  })
-
-  it('should return true for array of all functions', (done) => {
-    utils.is.arrayof([() => {}, () => 1], Function).should.equal(true)
-    done()
-  })
-
-  it('should return false for array of some functions', (done) => {
-    utils.is.arrayof([() => {}, '() => 1'], Function).should.equal(false)
     done()
   })
 })
@@ -262,7 +223,7 @@ describe('Testing `parser`', () => {
 
   it('should not throw if validation is successful', (done) => {
     const defaults = {}
-    const validators = {a: (x) => utils.is.a(x, 'string')}
+    const validators = {a: nutil.isString}
     const parser = utils.object.parser(defaults, validators)
 
     const input = {a: 'hello'}

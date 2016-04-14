@@ -7,9 +7,11 @@
 
 // TODO: support arrays for `dir` option
 // TODO: support .jsx files
+// TODO: add support for loading additional modules via autoload({dir: '..', modules: ['Hapi']})
 
 const path = require('path')
 const tree = require('./lib/tree.js')
+const nutil = require('util')
 const utils = require('./lib/utils.js')
 const obj = utils.object
 
@@ -27,12 +29,12 @@ const option = {
   },
 
   validators: {
-    include: (x) => x === null || utils.is.a(x, RegExp) || utils.is.arrayof(x, RegExp),
-    exclude: (x) => x === null || utils.is.a(x, RegExp) || utils.is.arrayof(x, RegExp),
-    isglobal: (x) => utils.is.a(x, 'boolean'),
-    namespace: (x) => utils.is.a(x, 'string'),
-    stopfile: (x) => x === null || utils.is.a(x, RegExp) || utils.is.arrayof(x, RegExp),
-    es6modules: (x) => utils.is.a(x, 'boolean'),
+    include: (x) => nutil.isNull(x) || nutil.isRegExp(x) || utils.all(x, nutil.isRegExp),
+    exclude: (x) => nutil.isNull(x) || nutil.isRegExp(x) || utils.all(x, nutil.isRegExp),
+    isglobal: nutil.isBoolean,
+    namespace: nutil.isString,
+    stopfile: (x) => nutil.isNull(x) || nutil.isRegExp(x) || utils.all(x, nutil.isRegExp),
+    es6modules: nutil.isBoolean,
   },
 
   mappers: {
