@@ -1,7 +1,11 @@
+/**
+* Autoloader module
+* Elias Malik
+* 2016
+*/
 'use strict'
 
-// TODO: support arrays for `dir`, `stopfile` options
-// TODO: support regex for `stopfile` option
+// TODO: support arrays for `dir` option
 // TODO: support .jsx files
 
 const path = require('path')
