@@ -70,13 +70,7 @@ module.exports = {
       // strip root-directory
       .map((file) => file.slice(opts.dir.length + 1))
       // map to dirname if file matches stopfile
-      .map((file) => {
-        if (utils.is.a(opts.stopfile, RegExp)) {
-          return opts.stopfile.test(file) ? path.dirname(file) : file
-        } else {
-          return file
-        }
-      })
+      .map((file) => opts.stopfile && opts.stopfile.test(file) ? path.dirname(file) : file)
       // strip file extension
       .map((file) => path.join(path.dirname(file), path.basename(file, '.js')))
       // build nested object from string
