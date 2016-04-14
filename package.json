@@ -1,6 +1,6 @@
 {
-  "name": "autoloader",
-  "version": "0.1.0",
+  "name": "modload",
+  "version": "1.0.0",
   "description": "A module autoloader",
   "main": "index.js",
   "scripts": {
@@ -8,9 +8,12 @@
     "cover": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha tests/runner.js"
   },
   "keywords": [
-    "autoloader"
+    "autoloader", "loader", "module", "apploader", "modload", "mod-load", "load"
   ],
-  "author": "Elias Malik",
+  "repository": "https://github.com/eliascodes/modload.git",
+  "homepage": "https://github.com/eliascodes/modload",
+  "bugs": "https://github.com/eliascodes/modload/issues",
+  "author": "Elias Malik <hello@elias.codes> (http://elias.codes)",
   "license": "MIT",
   "devDependencies": {
     "chai": "^3.5.0",
