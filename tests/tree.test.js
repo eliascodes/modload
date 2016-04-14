@@ -3,6 +3,7 @@
 require('chai').should()
 const fs = require('fs')
 const path = require('path')
+const utils = require('../lib/utils.js')
 const tree = require('../lib/tree.js')
 
 const DIR_DUMMY = path.join(__dirname, 'dummy')
@@ -47,8 +48,8 @@ describe('Walking with exclusions', () => {
     done()
   })
 
-  it('should exclude array of patterns', (done) => {
-    const exc = [/\.md/, /\.txt/, /\.css/, /\.scss/, /\.html/]
+  it('should exclude combination of patterns', (done) => {
+    const exc = utils.regex.combine(/\.md/, /\.txt/, /\.css/, /\.scss/, /\.html/)
 
     const result = tree.walk(DIR_DUMMY, null, exc)
 
@@ -85,9 +86,9 @@ describe('Walking with includes', () => {
   })
 
   it('should include array of patterns', (done) => {
-    const exc = [/\.md/, /\.txt/, /\.css/, /\.scss/, /\.html/]
+    const inc = utils.regex.combine(/\.md/, /\.txt/, /\.css/, /\.scss/, /\.html/)
 
-    const result = tree.walk(DIR_DUMMY, null, null, exc)
+    const result = tree.walk(DIR_DUMMY, null, null, inc)
 
     assertNumFilesInResults(5, DIR_DUMMY, result)
 

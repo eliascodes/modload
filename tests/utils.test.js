@@ -273,3 +273,16 @@ describe('Testing `parser`', () => {
     done()
   })
 })
+
+describe('Testing `combine`', () => {
+  it('should wrap a single RegExp in brackets and return it', (done) => {
+    utils.regex.combine(/hello/).should.deep.equal(/(hello)/)
+    done()
+  })
+
+  it('should successfully combine several arguments', (done) => {
+    utils.regex.combine(/hello/, /my/, /name/, /is/)
+      .should.deep.equal(/(hello)|(my)|(name)|(is)/)
+    done()
+  })
+})
