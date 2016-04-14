@@ -1,7 +1,6 @@
 coverage
 node_modules
 tests
-.eslint.json
+.eslintrc.json
 .eslintignore
 .gitignore
-README.md
