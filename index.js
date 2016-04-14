@@ -9,10 +9,36 @@ const tree = require('./lib/tree.js')
 const utils = require('./lib/utils.js')
 const obj = utils.object
 
-const defaults = require('./lib/defaults.js')
-const validators = require('./lib/validators.js')
+/*
+* Defaults, validators and transforms for options object
+*/
+const option = {
+  defaults: {
+    include: null,
+    exclude: null,
+    isglobal: false,
+    namespace: 'app',
+    stopfile: null,
+    es6modules: false
+  },
 
-const parser = obj.parser(defaults, validators)
+  validators: {
+    include: (x) => x === null || utils.is.a(x, RegExp) || utils.is.arrayof(x, RegExp),
+    exclude: (x) => x === null || utils.is.a(x, RegExp) || utils.is.arrayof(x, RegExp),
+    isglobal: (x) => utils.is.a(x, 'boolean'),
+    namespace: (x) => utils.is.a(x, 'string'),
+    stopfile: (x) => x === null || utils.is.a(x, RegExp) || utils.is.arrayof(x, RegExp),
+    es6modules: (x) => utils.is.a(x, 'boolean'),
+  },
+
+  mappers: {
+    include: (x) => x ? utils.regex.combine(x) : x,
+    exclude: (x) => x ? utils.regex.combine(x) : x,
+    stopfile: (x) => x ? utils.regex.combine(x) : x,
+  }
+}
+
+const parser = obj.parser(option.defaults, option.validators, option.mappers)
 
 module.exports = {
   asArray: function (options) {
