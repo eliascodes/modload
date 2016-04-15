@@ -82,6 +82,9 @@ Array of module objects
 ##### Parameters
 ###### options
 Options object with exactly the same fields as for the `asArray` method, but with the following additional field:
+> ##### `isglobal`
+> ###### ( Boolean | default: false )
+> If true, the returned object will also be attached to the `global` object under the key specified by the `namespace` parameter
 > ##### `namespace`
-> ###### ( String | default: null )
-> If set to a non-null string, specifies the key of the `global` object to which the object will be attached.
+> ###### ( String | default: 'app' )
+> Specifies the key of the `global` object to which the object will be attached.
