@@ -1,6 +1,6 @@
 {
   "name": "modload",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A module autoloader",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,13 @@
     "cover": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha tests/runner.js"
   },
   "keywords": [
-    "autoloader", "loader", "module", "apploader", "modload", "mod-load", "load"
+    "autoloader",
+    "loader",
+    "module",
+    "apploader",
+    "modload",
+    "mod-load",
+    "load"
   ],
   "repository": "https://github.com/eliascodes/modload.git",
   "homepage": "https://github.com/eliascodes/modload",
