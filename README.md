@@ -1,6 +1,17 @@
 # Node Autoloader
 A simple autoloader for node modules.
 
+## Install
+Local:
+```
+npm install modload --save
+```
+
+Global:
+```
+npm install modload -g
+```
+
 ## Examples
 * Require all files in a given directory and store the results in an array:
   ```javascript
