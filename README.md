@@ -15,9 +15,9 @@ npm install modload -g
 ## Examples
 * Require all files in a given directory and store the results in an array:
   ```javascript
-  const autoload = require('autoloader')
+  const load = require('modload')
 
-  const plugins = autoload.asArray({
+  const plugins = load.asArray({
     dir: path.join(__dirname, 'plugins')
   })
 
@@ -28,9 +28,9 @@ npm install modload -g
 
 * Require all files in a given directory and store the results in an object whose structure matches the directory structure:
   ```javascript
-  const autoload = require('autoloader')
+  const load = require('modload')
 
-  const app = autoload.asObject({
+  const app = load.asObject({
     dir: path.join(__dirname, 'app')
   })
   ```
@@ -59,7 +59,7 @@ npm install modload -g
   This object can be attached to the `global` object via an optional argument.
 
 ## API
-The autoloader module provides two methods, which both take an options object to configure their behaviour.
+Modload provides two methods, which both take an options object to configure their behaviour.
 
 <hr>
 
@@ -84,7 +84,7 @@ Options object with the following fields:
 > A file in the directory tree matching this pattern is interpreted as the entry point for it's parent directory. Only this file is required; all other files in the same directory, and in sub-directories, are skipped.
 > ##### `es6modules`
 > ###### ( Boolean | default: `false` )
-> A flag to specify whether modules are exported with ES6 module syntax (i.e. using the `export` keyword). If `true`, the autoloader will require the default value (i.e., whatever is exported by `export default`)
+> A flag to specify whether modules are exported with ES6 module syntax (i.e. using the `export` keyword). If `true`, modload will require the default value (i.e., whatever is exported by `export default`)
 
 ### `asObject(options)`
 ##### Return
