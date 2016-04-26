@@ -84,9 +84,8 @@ module.exports = {
       // merge objects
       .reduce((acc, curr) => obj.merge(acc, curr), {})
 
-    if (opts.isglobal) {
+    if (opts.isglobal)
       global[opts.namespace] = parsedObj
-    }
 
     return parsedObj
   }

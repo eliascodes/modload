@@ -42,7 +42,7 @@
 
     "array-callback-return": "error",
     "complexity": ["error", { "maximum": 5 }],
-    "curly": ["error", "multi-line", "consistent"],
+    "curly": ["error", "multi-or-nest", "consistent"],
     "dot-location": ["error", "property"],
     "dot-notation": "error",
     "eqeqeq": ["error", "smart"],
