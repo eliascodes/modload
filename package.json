@@ -1,6 +1,6 @@
 {
   "name": "modload",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A module autoloader",
   "main": "index.js",
   "scripts": {
