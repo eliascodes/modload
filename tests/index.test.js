@@ -26,6 +26,30 @@ describe('Test .asArray', () => {
     results.should.deep.equal(expected)
     done()
   })
+
+  it('should cope with serial calls, where exclude in first is include in other', (done) => {
+    const results = {
+      one: auto.asArray({dir: DIR_DUMMY, exclude: /dir_dummy_3/}),
+      two: auto.asArray({dir: DIR_DUMMY, include: /dir_dummy_3/})
+    }
+
+    const expected = {
+      one: prependDummyPath([
+        'file.dummy.1.js',
+        'file.dummy.2.js',
+        path.join('dir_dummy_1', 'file.dummy.1.js'),
+      ]),
+      two: prependDummyPath([
+        path.join('dir_dummy_2', 'dir_dummy_3', 'file.dummy.1.js'),
+        path.join('dir_dummy_2', 'dir_dummy_3', 'index.js'),
+        path.join('dir_dummy_2', 'dir_dummy_3', 'dir_dummy_4', 'file.dummy.1.js'),
+      ])
+    }
+
+    results.one.should.deep.equal(expected.one)
+    results.two.should.deep.equal(expected.two)
+    done()
+  })
 })
 
 describe('Test .asObject', () => {
