@@ -85,6 +85,9 @@ Options object with the following fields:
 > ##### `es6modules`
 > ###### ( Boolean | default: `false` )
 > A flag to specify whether modules are exported with ES6 module syntax (i.e. using the `export` keyword). If `true`, modload will require the default value (i.e., whatever is exported by `export default`)
+> ##### `modules`
+> ###### ( Array of Strings | default: `null` )
+> Array of module names to load. Useful for loading third-party modules at the same time as your own modules. Loaded before custom modules. For example `load.asArray({... modules: ['hapi']})` will load the `hapi` module before any others specified.
 
 ### `asObject(options)`
 ##### Return
@@ -92,7 +95,7 @@ Object of module objects, structured to reflect directory structure.
 
 ##### Parameters
 ###### options
-Options object with exactly the same fields as for the `asArray` method, but with the following additional field:
+Options object with exactly the same fields as for the `asArray` method, but with the following additional fields:
 > ##### `isglobal`
 > ###### ( Boolean | default: false )
 > If true, the returned object will also be attached to the `global` object under the key specified by the `namespace` parameter
