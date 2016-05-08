@@ -50,6 +50,21 @@ describe('Test .asArray', () => {
     results.two.should.deep.equal(expected.two)
     done()
   })
+
+  it('should handle arrays of regex in include and exclude', (done) => {
+    const results = auto.asArray({
+      dir: DIR_DUMMY,
+      exclude: [/dir_dummy_3/, /dir_dummy_1/]
+    })
+
+    const expected = prependDummyPath([
+      'file.dummy.1.js',
+      'file.dummy.2.js',
+    ])
+
+    results.should.deep.equal(expected)
+    done()
+  })
 })
 
 describe('Test .asObject', () => {
