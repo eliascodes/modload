@@ -246,4 +246,10 @@ describe('Testing `combine`', () => {
       .should.deep.equal(/(hello)|(my)|(name)|(is)/)
     done()
   })
+
+  it('should successfully combine if argument is array', (done) => {
+    utils.regex.combine([/hello/, /my/, /name/, /is/])
+      .should.deep.equal(/(hello)|(my)|(name)|(is)/)
+    done()
+  })
 })
