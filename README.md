@@ -88,7 +88,7 @@ Options object with the following fields:
 
 ### `asObject(options)`
 ##### Return
-Array of module objects
+Object of module objects, structured to reflect directory structure.
 
 ##### Parameters
 ###### options
