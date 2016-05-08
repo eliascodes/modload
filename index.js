@@ -7,7 +7,6 @@
 
 // TODO: support arrays for `dir` option
 // TODO: support .jsx files
-// TODO: add support for loading additional modules via autoload({dir: '..', modules: ['Hapi']})
 
 const path = require('path')
 const tree = require('./lib/tree.js')
@@ -25,7 +24,8 @@ const option = {
     isglobal: false,
     namespace: 'app',
     stopfile: null,
-    es6modules: false
+    es6modules: false,
+    modules: null
   },
 
   validators: {
@@ -35,12 +35,14 @@ const option = {
     namespace: nutil.isString,
     stopfile: (x) => nutil.isNull(x) || nutil.isRegExp(x) || utils.all(x, nutil.isRegExp),
     es6modules: nutil.isBoolean,
+    modules: (x) => nutil.isNull(x) || utils.all(x, nutil.isString),
   },
 
   mappers: {
     include: (x) => x ? utils.regex.combine(x) : x,
     exclude: (x) => x ? utils.regex.combine(x) : x,
     stopfile: (x) => x ? utils.regex.combine(x) : x,
+    modules: (x) => x ? x : []
   }
 }
 
@@ -52,13 +54,15 @@ module.exports = {
 
     const importer = opts.es6modules ? (file) => require(file).default : require
 
-    return tree
+    const mods = opts.modules.map(require)
+
+    return mods.concat(tree
       // walk directory tree for relevant files
       .walk(opts.dir, null, opts.exclude, opts.include, opts.stopfile)
       // filter out non-js files
       .filter((file) => path.extname(file) === '.js')
       // import modules
-      .map(importer)
+      .map(importer))
   },
 
   asObject: function (options) {
@@ -83,6 +87,13 @@ module.exports = {
       .map((file, i) => obj.createNested.fromString(file, path.sep, importer(fullfiles[i])))
       // merge objects
       .reduce((acc, curr) => obj.merge(acc, curr), {})
+
+    const mods = opts.modules.map(require).reduce((acc, curr, ii) => {
+      acc[opts.modules[ii]] = curr
+      return acc
+    }, {})
+
+    parsedObj = Object.assign(parsedObj, mods)
 
     if (opts.isglobal)
       global[opts.namespace] = parsedObj

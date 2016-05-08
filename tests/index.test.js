@@ -65,6 +65,14 @@ describe('Test .asArray', () => {
     results.should.deep.equal(expected)
     done()
   })
+
+  it('should be able to load external modules', (done) => {
+    const results = auto.asArray({dir: DIR_DUMMY, exclude: /.*/, modules: ['mocha']})
+
+    results.length.should.equal(1)
+    results[0].should.deep.equal(require('mocha'))
+    done()
+  })
 })
 
 describe('Test .asObject', () => {
@@ -134,6 +142,14 @@ describe('Test .asObject', () => {
 
     delete global.app
 
+    done()
+  })
+
+  it('should be able to load external modules', (done) => {
+    const results = auto.asObject({dir: DIR_DUMMY, exclude: /.*/, modules: ['mocha']})
+
+    Object.keys(results).length.should.equal(1)
+    results.mocha.should.deep.equal(require('mocha'))
     done()
   })
 })
