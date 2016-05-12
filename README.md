@@ -1,16 +1,10 @@
 # Node Autoloader
 A simple autoloader for node modules.
 
-## Install
-Local:
-```
-npm install modload --save
-```
+[![Travis](https://img.shields.io/travis/eliascodes/modload.svg)]()
 
-Global:
-```
-npm install modload -g
-```
+[![NPM](https://nodei.co/npm/modload.png?downloads=true&stars=true&downloadRank=true)](https://nodei.co/npm/modload/)
+
 
 ## Examples
 * Require all files in a given directory and store the results in an array:
