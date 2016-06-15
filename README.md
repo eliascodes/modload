@@ -1,7 +1,7 @@
 # Node Autoloader
 A simple autoloader for node modules.
 
-[![Travis](https://img.shields.io/travis/eliascodes/modload.svg)]()
+[![Build Status](https://travis-ci.org/eliascodes/modload.svg?branch=master)](https://travis-ci.org/eliascodes/modload)
 
 [![NPM](https://nodei.co/npm/modload.png?downloads=true&stars=true&downloadRank=true)](https://nodei.co/npm/modload/)
 
