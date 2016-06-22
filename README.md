@@ -3,6 +3,8 @@ A simple autoloader for node modules.
 
 [![Build Status](https://travis-ci.org/eliascodes/modload.svg?branch=master)](https://travis-ci.org/eliascodes/modload)
 
+[![Test Coverage](https://codeclimate.com/github/eliascodes/modload/badges/coverage.svg)](https://codeclimate.com/github/eliascodes/modload/coverage)
+
 [![NPM](https://nodei.co/npm/modload.png?downloads=true&stars=true&downloadRank=true)](https://nodei.co/npm/modload/)
 
 
